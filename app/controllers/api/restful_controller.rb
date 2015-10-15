@@ -3,7 +3,7 @@ class API::RestfulController < ActionController::Base
 
   include ::ProtectedFromForgery
 
-  before_filter :authenticate_user_by_token, unless: :current_user
+  before_filter :authenticate_user_by_token, if: :attempt_token_authentication?
 
   def create_action
     @event = service.create({resource_symbol => resource, actor: current_user})
@@ -28,10 +28,15 @@ class API::RestfulController < ActionController::Base
     authorize! action, instance_variable_get(:"@#{model}")
   end
 
+  def attempt_token_authentication?
+    !current_user && (request.headers['Loomio-User-Id'] || request.headers['Loomio-API-Key'])
+  end
+
   def authenticate_user_by_token
-    user_id, api_key = request.headers['Loomio-User-Id'], request.headers['Loomio-API-Key']
-    if user_id && api_key && user = User.find_by(id: user_id, email_api_key: api_key)
+    if user = User.find_by(id: request.headers['Loomio-User-Id'], email_api_key: request.headers['Loomio-API-Key'])
       sign_in user
+    else
+      head :unauthorized
     end
   end
 
