@@ -19,7 +19,7 @@ describe API::CommentsController do
       context 'success', focus: true do
         it "creates a comment" do
           request.headers['Loomio-User-Id'] = user.id
-          request.headers['Loomio-Email-API-Key'] = user.email_api_key
+          request.headers['Loomio-API-Key'] = user.email_api_key
           post :create, comment: comment_params
           expect(response).to be_success
           expect(Comment.where(body: comment_params[:body],

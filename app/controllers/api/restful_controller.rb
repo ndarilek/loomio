@@ -1,5 +1,9 @@
-class API::RestfulController < API::BaseController
+class API::RestfulController < ActionController::Base
   snorlax_used_rest!
+
+  include ::ProtectedFromForgery
+
+  before_filter :authenticate_user_by_token, unless: :current_user
 
   def create_action
     @event = service.create({resource_symbol => resource, actor: current_user})
@@ -15,9 +19,20 @@ class API::RestfulController < API::BaseController
 
   private
 
+  def permitted_params
+    @permitted_params ||= PermittedParams.new(params)
+  end
+
   def load_and_authorize(model, action = :show)
     instance_variable_set :"@#{model}", ModelLocator.new(model, params).locate
     authorize! action, instance_variable_get(:"@#{model}")
+  end
+
+  def authenticate_user_by_token
+    user_id, api_key = request.headers['Loomio-User-Id'], request.headers['Loomio-API-Key']
+    if user_id && api_key && user = User.find_by(id: user_id, email_api_key: api_key)
+      sign_in user
+    end
   end
 
   def service

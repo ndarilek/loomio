@@ -20,7 +20,7 @@ describe "Comments API v1" do
     end
 
     context "authenticated" do
-      let(:request_headers) { common_headers.merge({'Loomio-Email-API-Key' => @user.email_api_key}) }
+      let(:request_headers) { common_headers.merge({'Loomio-API-Key' => @user.email_api_key}) }
 
       it "creates a comment" do
         post '/api/v1/comments', comment_params, request_headers
