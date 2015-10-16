@@ -504,30 +504,21 @@ en:
 
   edit_group_form:
     title: 'Edit Group Settings'
-    profile:
-      label: 'Profile'
+    basic_settings:
       name: 'Name'
       description: 'Description'
-    privacy:
-      label: 'Privacy'
-      visible_to_members: 'Who can find this group?'
-      public_visibility: 'Anyone - list the group publicly'
-      organisation_visibility: "Organisation - unlisted to the public, but visible to members of {{parentGroupName}}"
-      private_visibility: 'Members only - the group will not be listed'
-      membership_granted_upon: 'How do people join?'
-      membership_by_request: 'Open - anyone can join the group'
-      membership_by_request_subgroup: 'Open to members of {{parentGroupName}}'
-      membership_by_approval: 'By request - anyone can request to join'
-      membership_by_approval_subgroup: 'By request from members of {{parentGroupName}}'
-      membership_by_invitation: 'Invitation only - new members must be invited'
-      discussion_privacy_options: 'Who can view threads?'
-      public_discussions: 'Public threads only'
+      group_privacy: Group privacy
+      open_visibility: 'Open: anyone can see the group, its members, and their threads. Anyone can ask to join.'
+      closed_visibility: "Closed: anyone can find the group, see who's in it, and request to join. Only members can see threads."
+      private_visibility: 'Private: only members can find the group and see threads.'
+    advanced_settings:
+      link_label: Advanced settings
+      thread_privacy: 'Thread privacy'
+      public_threads: 'Public threads only'
       public_discussions_subgroup: 'Anyone in {{parentGroupName}} can see discussions'
-      public_or_private_discussions: 'Allow public and private threads'
-      private_discussions: 'Only members can see discussions'
-    permissions:
-      label: 'Permissions'
-      helptext: 'What can members do?'
+      public_or_private_threads: 'Allow public and private threads'
+      private_threads: 'Only members can see discussions'
+      permissions: 'Permissions'
       members_can_add_members: 'Invite and approve new members'
       members_can_create_subgroups: 'Create subgroups'
       members_can_start_discussions: 'Start threads'
