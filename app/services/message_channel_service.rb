@@ -20,27 +20,25 @@ class MessageChannelService
                          discussion_description_edited
                          motion_description_edited)
 
-  def self.subscribe_to(user:, channel: )
-    raise AccessDeniedError.new unless can_subscribe?(user: user, channel: channel)
-    PrivatePub.subscription(channel: channel, server: ENV['FAYE_URL'])
+  def self.subscribe_to(user:, model:)
+    raise AccessDeniedError.new unless can_subscribe?(user: user, model: model)
+    PrivatePub.subscription(channel: channel_for(model), server: ENV['FAYE_URL'])
   end
 
-  def self.can_subscribe?(user:, channel:)
-    key = channel_key(channel)
-    case channel_type(channel)
-    when 'group'         then user.ability.can? :see_private_content, Group.find(key)
-    when 'discussion'    then user.ability.can? :show, Discussion.find(key)
-    when 'notifications' then key.to_i == user.id
-    else                      raise UnknownChannelError.new
+  def self.subscribe_to_notifications_for(user)
+    PrivatePub.subscription(channel: channel_for_notifications(user.id))
+  end
+
+  def self.can_subscribe?(user:, model:)
+    case model
+    when Group      then user.ability.can? :see_private_content, model
+    when Discussion then user.ability.can? :show, model
+    else                 raise UnknownChannelError.new
     end
   end
 
-  def self.channel_type(channel)
-    /\/(\w+)-(\w+)/.match(channel)[1]
-  end
-
-  def self.channel_key(channel)
-    /\/(\w+)-(\w+)/.match(channel)[2]
+  def self.channel_for(model)
+    "/#{model.class.to_s.downcase}-#{model.key}"
   end
 
   def self.channel_for_event(event)
@@ -51,13 +49,17 @@ class MessageChannelService
     end
   end
 
+  def self.channel_for_notifications(user_id)
+    "/notifications-#{user_id}"
+  end
+
   def self.publish_event(event)
     return unless channel = channel_for_event(event)
     publish channel, EventSerializer.new(event).as_json
   end
 
   def self.publish_notification(notification)
-    publish "/notifications-#{notification.user_id}", NotificationSerializer.new(notification).as_json
+    publish channel_for_notifications(notification.user_id), NotificationSerializer.new(notification).as_json
   end
 
   def self.publish(channel, data)

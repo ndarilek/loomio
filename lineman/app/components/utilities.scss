@@ -333,6 +333,11 @@ label.label-with-details{
   @include boxLarge;
 }
 
+.lmo-box--featured {
+  text-align: center;
+  @include boxFeatured;
+}
+
 .lmo-rounded-corners {
   @include roundedCorners;
 }
@@ -388,6 +393,11 @@ label.label-with-details{
 
 .dropdown-menu i.fa {
   width: 30px;
+}
+
+.lmo-user-mention {
+  font-weight: bold;
+  color: black;
 }
 
 .timeago{

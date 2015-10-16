@@ -106,6 +106,7 @@ class Group < ActiveRecord::Base
   has_many :memberships,
            -> { where is_suspended: false, archived_at: nil },
            extend: GroupMemberships
+  define_counter_cache(:memberships_count) { |group| group.memberships.count }
 
   has_many :all_memberships,
            dependent: :destroy,
@@ -234,7 +235,7 @@ class Group < ActiveRecord::Base
   end
 
   def creator_id
-    self[:creator_id] || creator.id
+    self[:creator_id] || creator.try(:id)
   end
 
   def coordinators
@@ -444,7 +445,7 @@ class Group < ActiveRecord::Base
   end
 
   def members_count
-    members.count
+    self.memberships_count
   end
 
   def update_full_name_if_name_changed
