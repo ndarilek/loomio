@@ -36,7 +36,21 @@
         .group-theme__member-actions.lmo-btn-group.lmo-btn-group-right{ng-if: 'isMember()'}
           .lmo-btn-wrapper
             %group_actions_dropdown{group: 'group'}
-          .lmo-btn-wrapper
-            %group_privacy_dropdown{group: 'group'}
+          .btn.group-theme__privacy
+            .group-visibility-public{ng_show: 'group.visibleToPublic()'}
+              .sr-only{translate: 'group_page.privacy.public'}
+              .screen-only{aria-hidden:'true'}
+                %i.fa.fa-lg.fa-globe>
+                %span{translate: 'common.privacy.public'}
+            .group-visibility-organisation{ng_show: 'group.visibleToorganisation()'}
+              .sr-only{translate: 'group_page.privacy.parent_members', translate-value-group-name: '{{group.name}}', translate-value-parent-group-name: '{{group.parentName()}}'}
+              .screen-only{aria-hidden:'true'}
+                %i.fa.fa-lg.fa-users
+                %span{translate: 'common.privacy.organisation'}
+            .group-visibility-private{ng_show: 'group.visibleToMembers()'}
+              .sr-only{translate: 'group_page.privacy.private'}
+              .screen-only{aria-hidden:'true'}
+                %i.fa.fa-lg.fa-lock>
+                %span{translate: 'common.privacy.private'}
         %join_group_button{group: 'group'}
       .clearfix
