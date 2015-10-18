@@ -33,7 +33,7 @@ describe 'Group Page', ->
     beforeEach ->
       groupsHelper.load()
 
-    it 'successfully starts a subgroup', ->
+    iit 'successfully starts a subgroup', ->
       groupsHelper.openMemberOptionsDropdown()
       groupsHelper.clickAddSubgroupLink()
       groupsHelper.fillInSubgroupName('The Breakfast Club')
@@ -59,24 +59,20 @@ describe 'Group Page', ->
       expect(groupsHelper.editGroupFormValidationErrors().isDisplayed()).toBeTruthy()
       expect(groupsHelper.editGroupFormValidationErrors().getText()).toContain("can't be blank")
 
-     it 'successfully edits group description', ->
+    it 'successfully edits group description', ->
       groupsHelper.visitEditGroupPage()
       groupsHelper.editGroupDescription("Describin' the group")
       groupsHelper.submitEditGroupForm()
       expect(flashHelper.flashMessage()).toContain('Group updated')
       expect(groupsHelper.groupPageDescriptionText().getText()).toContain("Describin' the group")
 
-    it 'successfully edits group privacy', ->
-      groupsHelper.visitEditGroupPage()
-      groupsHelper.changeGroupVisibilitySettings()
-      groupsHelper.submitEditGroupForm()
-      expect(groupsHelper.groupPage()).toContain('This group is only visible to members')
-
     it 'successfully edits group permissions', ->
       groupsHelper.visitEditGroupPage()
+      groupsHelper.expandAdvancedSettings()
       groupsHelper.changeVotingPermissions()
       groupsHelper.submitEditGroupForm()
       groupsHelper.visitEditGroupPage()
+      groupsHelper.expandAdvancedSettings()
       expect(groupsHelper.votePermissionsCheckbox().isSelected()).not.toBeTruthy()
 
   describe 'leaving a group', ->

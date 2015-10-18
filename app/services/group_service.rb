@@ -19,7 +19,7 @@ class GroupService
     actor.ability.authorize! :update, group
     group.assign_attributes(params)
     group.group_privacy = params[:group_privacy] if params[:group_privacy]
-    group.tap(&:save!)
+    group.tap(&:save)
   end
 
   def self.archive(group:, actor:)

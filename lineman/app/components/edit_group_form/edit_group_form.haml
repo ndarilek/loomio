@@ -12,12 +12,12 @@
       .edit-group-form__basic-settings
         .edit-group-form__name
           %label{for: 'group-name', translate: 'edit_group_form.basic_settings.name'}
-          %input.edit-group-form__name.form-control#group-name{ng-required: true, ng-model: 'group.name', maxlength: '255'}
+          %input.form-control#group-name{ng-required: true, ng-model: 'group.name', maxlength: '255'}
           %validation_errors{subject: 'group', field: 'name'}
 
         .edit-group-form__description
           %label{for: 'group-description', translate: 'edit_group_form.basic_settings.description'}
-          %textarea.edit-group-form__description.form-control#group-description{msd-elastic: 'true', ng-model: 'group.description'}
+          %textarea.form-control#group-description{msd-elastic: 'true', ng-model: 'group.description'}
 
         .edit-group-form__privacy
           %label{for: 'group-privacy', translate: 'edit_group_form.basic_settings.group_privacy'}
