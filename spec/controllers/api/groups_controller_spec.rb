@@ -44,4 +44,37 @@ describe API::GroupsController do
     end
   end
 
+  describe 'update' do
+    it 'can update the group privacy to "open"' do
+      group_params = { group_privacy: 'open' }
+      group.tap { |g| g.group_privacy = 'closed' }.save
+      post :update, id: group.key, group: group_params
+      group.reload
+      expect(group.group_privacy).to eq 'open'
+      expect(group.is_visible_to_public).to eq true
+      expect(group.membership_granted_upon).to eq 'approval'
+      expect(group.discussion_privacy_options).to eq 'public_only'
+    end
+
+    it 'can update the group privacy to "closed"' do
+      group_params = { group_privacy: 'closed' }
+      post :update, id: group.key, group: group_params
+      group.reload
+      expect(group.group_privacy).to eq 'closed'
+      expect(group.is_visible_to_public).to eq true
+      expect(group.membership_granted_upon).to eq 'approval'
+      expect(group.discussion_privacy_options).to eq 'private_only'
+    end
+
+    it 'can update the group privacy to "private"' do
+      group_params = { group_privacy: 'private' }
+      post :update, id: group.key, group: group_params
+      group.reload
+      expect(group.group_privacy).to eq 'private'
+      expect(group.is_visible_to_public).to eq false
+      expect(group.membership_granted_upon).to eq 'invitation'
+      expect(group.discussion_privacy_options).to eq 'private_only'
+    end
+  end
+
 end

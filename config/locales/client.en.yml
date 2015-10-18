@@ -11,9 +11,9 @@ en:
     group: 'Group'
     groups: 'Groups'
     privacy:
-      private: 'Private'
       public: 'Public'
-      organisation: 'Organisation'
+      closed: 'Closed'
+      private: 'Private'
     selected: 'Selected'
     date_range:
       today: 'Today'

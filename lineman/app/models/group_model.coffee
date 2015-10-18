@@ -90,17 +90,14 @@ angular.module('loomioApp').factory 'GroupModel', (BaseModel, AppConfig) ->
     parentName: ->
       @parent().name if @parent()?
 
-    parentIsHidden: ->
-      @parent().visibleToPublic() if @parentId?
+    isOpen: ->
+      @groupPrivacy == 'open'
 
-    visibleToPublic: ->
-      @visibleTo == 'public'
+    isClosed: ->
+      @groupPrivacy == 'closed'
 
-    visibleToOrganisation: ->
-      @visibleTo == 'parent_members'
-
-    visibleToMembers: ->
-      @visibleTo == 'members'
+    isPrivate: ->
+      @groupPrivacy == 'private'
 
     isSubgroup: ->
       @parentId?

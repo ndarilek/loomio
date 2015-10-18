@@ -17,8 +17,9 @@ class GroupService
 
   def self.update(group:, params:, actor:)
     actor.ability.authorize! :update, group
-    group.update params
-    group
+    group.assign_attributes(params)
+    group.group_privacy = params[:group_privacy] if params[:group_privacy]
+    group.tap(&:save!)
   end
 
   def self.archive(group:, actor:)

@@ -18,7 +18,7 @@ class GroupSerializer < ActiveModel::Serializer
              :members_can_vote,
              :memberships_count,
              :members_count,
-             :visible_to,
+             :group_privacy,
              :membership_granted_upon,
              :discussion_privacy_options,
              :logo_url_medium,

@@ -6,22 +6,6 @@ angular.module('loomioApp').factory 'EditGroupForm', ->
     $scope.submit = FormService.submit $scope, $scope.group,
       flashSuccess: 'edit_group_form.messages.success'
 
-    legacyVisibilityMapping =
-      public:       'open'
-      organization: 'closed'
-      members:      'private'
-
-    setDefaultVisibility = (group) ->
-      return group.visibleTo if _.contains ['open', 'closed', 'private'], group.visibleTo
-      if mappedLegacyValue = legacyVisibilityMapping[group.visibleTo]
-        mappedLegacyValue
-      else if $scope.group.isSubgroup()
-        setDefaultVisibility(group.parent())
-      else
-        'open'
-
-    $scope.group.visibleTo = setDefaultVisibility($scope.group)
-
     $scope.expandForm = ->
       $scope.expanded = true
 

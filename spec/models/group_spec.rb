@@ -224,6 +224,49 @@ describe Group do
     end
   end
 
+  describe "group_privacy" do
+    it 'gets values for "open" correctly' do
+      group.is_visible_to_public = true
+      group.discussion_privacy_options = 'public_only'
+      expect(group.group_privacy).to eq 'open'
+    end
+
+    it 'gets values for "closed" correctly' do
+      group.is_visible_to_public = true
+      group.discussion_privacy_options = 'public_or_private'
+      expect(group.group_privacy).to eq 'closed'
+      group.discussion_privacy_options = 'private_only'
+      expect(group.group_privacy).to eq 'closed'
+
+    end
+
+    it 'gets values for "private" correctly' do
+      group.is_visible_to_public = false
+      expect(group.group_privacy).to eq 'private'
+    end
+  end
+
+  describe "group_privacy=" do
+    it 'sets values for "open" correctly' do
+      group.group_privacy = 'open'
+      expect(group.is_visible_to_public).to eq true
+      expect(group.discussion_privacy_options).to eq 'public_only'
+      expect(group.membership_granted_upon).to eq 'approval'
+    end
+    it 'sets values for "closed" correctly' do
+      group.group_privacy = 'closed'
+      expect(group.is_visible_to_public).to eq true
+      expect(group.discussion_privacy_options).to eq 'private_only'
+      expect(group.membership_granted_upon).to eq 'approval'
+    end
+    it 'sets values for "private" correctly' do
+      group.group_privacy = 'private'
+      expect(group.is_visible_to_public).to eq false
+      expect(group.discussion_privacy_options).to eq 'private_only'
+      expect(group.membership_granted_upon).to eq 'invitation'
+    end
+  end
+
   describe "parent_members_can_see_discussions_is_valid?" do
     context "parent_members_can_see_discussions = true" do
 
@@ -242,11 +285,6 @@ describe Group do
                         parent: create(:group),
                         parent_members_can_see_discussions: true) }.to_not raise_error
       end
-    end
-
-    context "both are true" do
-      it "raises error about it"
-      # dont merge before there is a spec here
     end
   end
 

@@ -20,18 +20,18 @@
           %textarea.edit-group-form__description.form-control#group-description{msd-elastic: 'true', ng-model: 'group.description'}
 
         .edit-group-form__privacy
-          %label{for: 'group-visible-to', translate: 'edit_group_form.basic_settings.group_privacy'}
+          %label{for: 'group-privacy', translate: 'edit_group_form.basic_settings.group_privacy'}
           .edit-group-form__radio-list-item
             %label
-              %input{type: 'radio', ng-model: 'group.visibleTo', value: 'open', name: 'visibleTo'}
+              %input{type: 'radio', ng-model: 'group.groupPrivacy', value: 'open', name: 'groupPrivacy'}
               %span{translate: 'edit_group_form.basic_settings.open_visibility'}
           .edit-group-form__radio-list-item
             %label
-              %input{type: 'radio', ng-model: 'group.visibleTo', value: 'closed', name: 'visibleTo'}
+              %input{type: 'radio', ng-model: 'group.groupPrivacy', value: 'closed', name: 'groupPrivacy'}
               %span{translate: 'edit_group_form.basic_settings.closed_visibility'}
           .edit-group-form__radio-list-item
             %label
-              %input{type: 'radio', ng-model: 'group.visibleTo', value: 'private', name: 'visibleTo'}
+              %input{type: 'radio', ng-model: 'group.groupPrivacy', value: 'private', name: 'groupPrivacy'}
               %span{translate: 'edit_group_form.basic_settings.private_visibility'}
 
       %button.lmo-link.edit-group-form__advanced-link{type: 'button', ng-show: '!expanded', ng-click: 'expandForm()', translate: 'edit_group_form.advanced_settings.link_label'}
@@ -40,11 +40,10 @@
 
         .edit-group-form__thread-privacy
           %label{for: 'group-discussion-privacy-options', translate: 'edit_group_form.advanced_settings.thread_privacy'}
-          .edit-group-form__public-option{ng-if: 'group.visibleTo == "open"'}
+          .edit-group-form__public-option{ng-if: 'group.groupPrivacy == "open"'}
             %span{translate: 'edit_group_form.advanced_settings.public_threads'}
-            %input{type: 'hidden', value: 'public_only'}
 
-          .edit-group-form__closed-options{ng-if: 'group.visibleTo == "closed"'}
+          .edit-group-form__closed-options{ng-if: 'group.groupPrivacy == "closed"'}
             .edit-group-form__radio-list-item
               %label
                 %input{type: 'radio', ng-model: 'group.discussionPrivacyOptions', value: 'public_only', name: 'discussion-privacy-options'}
@@ -58,9 +57,8 @@
                 %input{type: 'radio', ng-model: 'group.discussionPrivacyOptions', value: 'private_only', name: 'discussion-privacy-options'}
                 %span{translate: 'edit_group_form.advanced_settings.private_threads'}
 
-          .edit-group-form__private-option{ng-if: 'group.visibleTo == "private"'}
+          .edit-group-form__private-option{ng-if: 'group.groupPrivacy == "private"'}
             %span{translate: 'edit_group_form.advanced_settings.private_threads'}
-            %input{type:'hidden', value: 'private_only'}
 
         .edit-group-form__permissions
           %label{for: 'group-discussion-permissions', translate: 'edit_group_form.advanced_settings.permissions'}
