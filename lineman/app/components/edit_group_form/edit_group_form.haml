@@ -62,6 +62,10 @@
 
         .edit-group-form__permissions
           %label{for: 'group-discussion-permissions', translate: 'edit_group_form.advanced_settings.permissions'}
+          .checkbox{ng-if: 'group.isSubgroup()'}
+            %label{for: 'group-is-visible-to-parent-members'}
+              %input.edit-group-form__visible-to-parent-members#group-is-visible-to-parent-members{type: 'checkbox', ng-model: 'group.isVisibleToParentMembers'}
+              %span{translate: 'edit_group_form.advanced_settings.is_visible_to_parent_members', translate-value-parent-group-name: '{{group.parent().name}}'}
           .checkbox
             %label{for: 'group-members-can-add-members'}
               %input.edit-group-form__members-can-add-members#group-members-can-add-members{type: 'checkbox', ng-model: 'group.membersCanAddMembers'}

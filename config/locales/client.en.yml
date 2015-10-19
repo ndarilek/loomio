@@ -519,6 +519,7 @@ en:
       public_or_private_threads: 'Allow public and private threads'
       private_threads: 'Only members can see discussions'
       permissions: 'Permissions'
+      is_visible_to_parent_members: 'Content is visible to members of {{parentGroupName}}'
       members_can_add_members: 'Invite and approve new members'
       members_can_create_subgroups: 'Create subgroups'
       members_can_start_discussions: 'Start threads'
