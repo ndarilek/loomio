@@ -1,4 +1,4 @@
-angular.module('loomioApp').factory 'ThreadQueryService', (Records) ->
+angular.module('loomioApp').factory 'ThreadQueryService', (Records, CurrentUser) ->
   new class ThreadQueryService
 
     filterQuery: (filter, options = {}) ->
@@ -17,6 +17,7 @@ angular.module('loomioApp').factory 'ThreadQueryService', (Records) ->
 
     createBaseView = (filters, queryType) ->
       view = Records.discussions.collection.addDynamicView 'default'
+      view.applyFind(groupId: {$in: CurrentUser.groupIds()})
       applyFilters(view, filters, queryType)
       view
 
@@ -29,6 +30,7 @@ angular.module('loomioApp').factory 'ThreadQueryService', (Records) ->
     createTimeframeView = (name, filters, queryType, from, to) ->
       today = moment().startOf 'day'
       view = Records.discussions.collection.addDynamicView name
+      view.applyFind(groupId: {$in: CurrentUser.groupIds()})
       view.applyFind(lastActivityAt: { $gt: parseTimeOption(from) })
       view.applyFind(lastActivityAt: { $lt: parseTimeOption(to) })
       applyFilters(view, filters, queryType)
@@ -52,13 +54,10 @@ angular.module('loomioApp').factory 'ThreadQueryService', (Records) ->
           view.applyFind(lastActivityAt: { $gt: moment().startOf('day').subtract(6, 'week').toDate() })
           view.applyWhere (thread) -> thread.isUnread()
 
-      if _.contains(filters, 'show_muted')
-        view.applyFind(volume: { $eq: 'mute' })
-      else
-        view.applyFind(volume: { $ne: 'mute' })
-
       _.each filters, (filter) ->
         switch filter
+          when 'show_muted'         then view.applyFind(volume: { $eq: 'mute' })
+          when 'show_not_muted'     then view.applyFind(volume: { $ne: 'mute' })
           when 'show_participating' then view.applyFind(participating: true)
           when 'show_starred'       then view.applyFind(starred: true)
           when 'show_proposals'     then view.applyWhere (thread) -> thread.hasActiveProposal()
