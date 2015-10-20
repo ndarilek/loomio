@@ -134,7 +134,7 @@ class Ability
       not user_to_deactivate.adminable_groups.published.any? { |g| g.admins.count == 1 }
     end
 
-    can [:update, :get_notifications_for], User do |user|
+    can [:update, :see_notifications_for], User do |user|
       @user == user
     end
 

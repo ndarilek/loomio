@@ -10,7 +10,7 @@ class API::MessageChannelController < API::RestfulController
 
   def subscribe_user
     @subscriptions = current_user.groups.map { |group| MessageChannelService.subscribe_to(user: current_user, model: group) }
-    @subscriptions <<                                  MessageChannelService.subscribe_to_notifications_for(current_user)
+    @subscriptions <<                                  MessageChannelService.subscribe_to(user: current_user, model: current_user)
     respond_with_subscriptions
   end
 
