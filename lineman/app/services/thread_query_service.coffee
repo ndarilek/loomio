@@ -56,8 +56,10 @@ angular.module('loomioApp').factory 'ThreadQueryService', (Records, CurrentUser)
 
       _.each filters, (filter) ->
         switch filter
-          when 'show_muted'         then view.applyFind(volume: { $eq: 'mute' })
-          when 'show_not_muted'     then view.applyFind(volume: { $ne: 'mute' })
+          when 'show_muted'
+            view.applyFind($or: {volume: { $eq: 'mute' }, groupId: {$in: CurrentUser.mutedGroupIds()}})
+          when 'show_not_muted'
+            view.applyFind($or: {volume: { $ne: 'mute' }, groupId: {$in: CurrentUser.notMutedGroupIds()}})
           when 'show_participating' then view.applyFind(participating: true)
           when 'show_starred'       then view.applyFind(starred: true)
           when 'show_proposals'     then view.applyWhere (thread) -> thread.hasActiveProposal()
