@@ -17,7 +17,6 @@ angular.module('loomioApp').factory 'ThreadQueryService', (Records, CurrentUser)
 
     createBaseView = (filters, queryType) ->
       view = Records.discussions.collection.addDynamicView 'default'
-      view.applyFind(groupId: {$in: CurrentUser.groupIds()})
       applyFilters(view, filters, queryType)
       view
 
@@ -30,7 +29,6 @@ angular.module('loomioApp').factory 'ThreadQueryService', (Records, CurrentUser)
     createTimeframeView = (name, filters, queryType, from, to) ->
       today = moment().startOf 'day'
       view = Records.discussions.collection.addDynamicView name
-      view.applyFind(groupId: {$in: CurrentUser.groupIds()})
       view.applyFind(lastActivityAt: { $gt: parseTimeOption(from) })
       view.applyFind(lastActivityAt: { $lt: parseTimeOption(to) })
       applyFilters(view, filters, queryType)
@@ -64,9 +62,10 @@ angular.module('loomioApp').factory 'ThreadQueryService', (Records, CurrentUser)
           when 'show_not_muted'
             view.applyFind(groupId: {$in: CurrentUser.notMutedGroupIds()})
             view.applyFind(volume: { $ne: 'mute' })
-          when 'show_participating' then view.applyFind(participating: true)
-          when 'show_starred'       then view.applyFind(starred: true)
-          when 'show_proposals'     then view.applyWhere (thread) -> thread.hasActiveProposal()
-          when 'hide_proposals'     then view.applyWhere (thread) -> !thread.hasActiveProposal()
+          when 'only_threads_in_my_groups' then view.applyFind(groupId: {$in: CurrentUser.groupIds()})
+          when 'show_participating'        then view.applyFind(participating: true)
+          when 'show_starred'              then view.applyFind(starred: true)
+          when 'show_proposals'            then view.applyWhere (thread) -> thread.hasActiveProposal()
+          when 'hide_proposals'            then view.applyWhere (thread) -> !thread.hasActiveProposal()
 
       view
