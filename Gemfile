@@ -1,3 +1,5 @@
+require_relative 'lib/sandstorm'
+
 source 'http://rubygems.org'
 
 ruby '2.2.2'
@@ -122,6 +124,6 @@ group :production do
   gem 'rails_serve_static_assets'
   gem 'delayed-plugins-airbrake'
   gem 'dalli'
-  gem 'newrelic_rpm'
+  gem 'newrelic_rpm' unless is_in_sandstorm?
   gem 'heroku-deflater'
 end
