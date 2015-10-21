@@ -1,6 +1,10 @@
 class GroupSubdomainConstraint
   def self.matches?(request)
-    request.subdomain.present? && (request.subdomain != 'www')
+    if is_in_sandstorm?
+      false
+    else
+      request.subdomain.present? && (request.subdomain != 'www')
+    end
   end
 end
 

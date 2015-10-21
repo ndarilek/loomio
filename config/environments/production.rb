@@ -11,6 +11,13 @@ Loomio::Application.configure do
 
   config.static_cache_control = 'public, max-age=31536000'
 
+  if is_in_sandstorm?
+    config.assets.configure do |env|
+      # override the default location of tmp/cache/assets
+      env.cache = ActiveSupport::Cache::FileStore.new("read-only-cache/assets")
+    end
+  end
+
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
@@ -80,4 +87,9 @@ Loomio::Application.configure do
 
   config.serve_static_files = true
   config.action_mailer.raise_delivery_errors = true
+
+  if is_in_sandstorm?
+    # Enable stdout logger
+    config.logger = Logger.new(STDOUT)
+  end
 end
