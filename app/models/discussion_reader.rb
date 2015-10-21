@@ -25,7 +25,7 @@ class DiscussionReader < ActiveRecord::Base
   end
 
   def set_volume_as_required!
-    if user.email_on_participation?
+    if user.email_on_participation? and !is_in_sandstorm?
       set_volume! :loud unless volume_is_loud?
     end
   end

@@ -2,13 +2,14 @@
   .col-md-9
     = render '/groups/title', group: @group
     %h1= t :members
-  .col-md-3
-    %a.btn.btn-default.btn-block.btn-left{href: new_group_invitation_path(@group), id: 'invite-new-members'}
-      %i.fa.fa-user
-      = t :invite_people
-    %a.btn.btn-default.btn-block.btn-left{href: "#email-members-modal", "data-toggle" => "modal"}
-      %i.fa.fa-envelope
-      = t(:email_group_members)
+  - unless is_in_sandstorm?
+    .col-md-3
+      %a.btn.btn-default.btn-block.btn-left{href: new_group_invitation_path(@group), id: 'invite-new-members'}
+        %i.fa.fa-user
+        = t :invite_people
+      %a.btn.btn-default.btn-block.btn-left{href: "#email-members-modal", "data-toggle" => "modal"}
+        %i.fa.fa-envelope
+        = t(:email_group_members)
 
     = render "groups/email_members", :group => @group
 
@@ -17,7 +18,8 @@
   %thead
     %th.col-md-1= t :photo
     %th= t :name
-    %th= t :"common.email"
+    - unless is_in_sandstorm?
+      %th= t :"common.email"
     %th= t :coordinator
     %th= t :remove
   %tbody
@@ -28,7 +30,8 @@
         %td
           %div= link_to user.name, user_path(user)
           %div.access-level= t :coordinator if membership.admin?
-        %td=user.email
+        - unless is_in_sandstorm?
+          %td=user.email
         %td
           - if membership.admin?
             = link_to t(:remove_coordinator),

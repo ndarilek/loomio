@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   validates_inclusion_of :avatar_kind, in: AVATAR_KINDS
 
   validates_uniqueness_of :username
-  validates_length_of :username, maximum: 30
+  validates_length_of :username, maximum: 30 unless is_in_sandstorm?
   validates_format_of :username, with: /\A[a-z0-9]*\z/, message: I18n.t(:'error.username_must_be_alphanumeric')
 
   validates_length_of :password, minimum: 8, allow_nil: true
@@ -282,24 +282,28 @@ class User < ActiveRecord::Base
   end
 
   def avatar_url(size=nil)
-    size = size ? size.to_sym : :medium
-    case size
-    when :small
-      pixels = User::SMALL_IMAGE
-    when :medium
-      pixels = User::MEDIUM_IMAGE
-    when :"med-large"
-      pixels = User::MED_LARGE_IMAGE
-    when :large
-      pixels = User::LARGE_IMAGE
+    if is_in_sandstorm?
+      @sandstorm_avatar_url
     else
-      pixels = User::SMALL_IMAGE
-    end
+      size = size ? size.to_sym : :medium
+      case size
+      when :small
+        pixels = User::SMALL_IMAGE
+      when :medium
+        pixels = User::MEDIUM_IMAGE
+      when :"med-large"
+        pixels = User::MED_LARGE_IMAGE
+      when :large
+        pixels = User::LARGE_IMAGE
+      else
+        pixels = User::SMALL_IMAGE
+      end
 
-    if avatar_kind == "gravatar"
-      gravatar_url(:size => pixels)
-    else
-      uploaded_avatar.url(size)
+      if avatar_kind == "gravatar"
+        gravatar_url(:size => pixels)
+      else
+        uploaded_avatar.url(size)
+      end
     end
   end
 

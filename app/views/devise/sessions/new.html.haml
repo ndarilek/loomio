@@ -3,37 +3,40 @@
     .inner-container
       .row
         .col-md-6.col-md-offset-3.col-xs-12
-          - if omniauth_authenticated_and_waiting?
-            %h1= t :link_up_your_account
-            %p= t :log_in_to_your_loomio_account, provider_name: @omniauth_authentication.provider_name
-          -else
-            %h1
-              - if @invitation
-                - if @invitation.to_start_group?
-                  = t :'start_group.log_in'
+          - if is_in_sandstorm?
+            %p= t :please_sign_in_above
+          - else
+            - if omniauth_authenticated_and_waiting?
+              %h1= t :link_up_your_account
+              %p= t :log_in_to_your_loomio_account, provider_name: @omniauth_authentication.provider_name
+            -else
+              %h1
+                - if @invitation
+                  - if @invitation.to_start_group?
+                    = t :'start_group.log_in'
+                  - else
+                    = t(:'join_group.log_in', group_name: @invitation.invitable_name)
                 - else
-                  = t(:'join_group.log_in', group_name: @invitation.invitable_name)
-              - else
-                = t :sign_in
+                  = t :sign_in
 
-          %h2= t :"common.welcome_back"
-          %p
-            = t(:'dont_have_an_account')
-            = link_to t(:'create_one_now'), new_user_registration_path, id:'create_account'
-          .signin_container
-            = render "form"
-            -unless omniauth_authenticated_and_waiting?
-              .sso-btn-row
-                %label= t :log_in_with_third_party
-                = link_to user_omniauth_authorize_path(:facebook), class: 'btn btn-default btn-block btn-lg login' do
-                  = t :log_in_with_facebook
-                = link_to user_omniauth_authorize_url(:google, host: ENV['CANONICAL_HOST'] || request.host), class: 'btn btn-default btn-block btn-lg login' do
-                  = t :log_in_with_google
-                = link_to user_omniauth_authorize_path(:twitter), class: 'btn btn-default btn-block btn-lg login', id: 'twitter-login-btn' do
-                  = t :log_in_with_twitter
-                = link_to user_omniauth_authorize_path(:browser_id), class: 'btn btn-default btn-block btn-lg login', id: 'persona-login-btn' do
-                  = t :log_in_with_persona
+            %h2= t :"common.welcome_back"
+            %p
+              = t(:'dont_have_an_account')
+              = link_to t(:'create_one_now'), new_user_registration_path, id:'create_account'
+            .signin_container
+              = render "form"
+              -unless omniauth_authenticated_and_waiting?
+                .sso-btn-row
+                  %label= t :log_in_with_third_party
+                  = link_to user_omniauth_authorize_path(:facebook), class: 'btn btn-default btn-block btn-lg login' do
+                    = t :log_in_with_facebook
+                  = link_to user_omniauth_authorize_url(:google, host: ENV['CANONICAL_HOST'] || request.host), class: 'btn btn-default btn-block btn-lg login' do
+                    = t :log_in_with_google
+                  = link_to user_omniauth_authorize_path(:twitter), class: 'btn btn-default btn-block btn-lg login', id: 'twitter-login-btn' do
+                    = t :log_in_with_twitter
+                  = link_to user_omniauth_authorize_path(:browser_id), class: 'btn btn-default btn-block btn-lg login', id: 'persona-login-btn' do
+                    = t :log_in_with_persona
 
 
-          .terms
-            =t(:tos_html, link_path: terms_of_service_path) if hosted_by_loomio?
+            .terms
+              =t(:tos_html, link_path: terms_of_service_path) if hosted_by_loomio?

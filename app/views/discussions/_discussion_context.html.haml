@@ -22,7 +22,12 @@
           = t :"volume.#{current_volume}"
           %span.caret
         %ul.dropdown-menu.dropdown-menu-right{role: 'menu'}
-          - %w[loud normal quiet mute].each do |volume|
+          - volumes = []
+          - if is_in_sandstorm?
+            - volumes = %w[quiet mute]
+          - else
+            - volumes = %w[loud normal quiet mute]
+          - volumes.each do |volume|
             %li.dropdown-menu-item
               = link_to [:set_volume, @discussion, volume: volume], method: :post do
                 %i.fa.fa-lg.fa-fw{class: icon_class_for_volume(volume)}

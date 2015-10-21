@@ -210,15 +210,14 @@ Devise.setup do |config|
   config.omniauth :browser_id
   config.omniauth :twitter, Rails.application.secrets.twitter_key, Rails.application.secrets.twitter_secret
 
-  # ==> Warden configuration
-  # If you want to use other strategies, that are not supported by Devise, or
-  # change the failure app, you can configure them inside the config.warden block.
-  #
-  # config.warden do |manager|
-  #   manager.intercept_401 = false
-  #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
-  # end
-  #
+  if is_in_sandstorm?
+    config.warden do |manager|
+      manager.intercept_401 = false
+      manager.strategies.add(:sandstorm, Devise::Strategies::Sandstorm)
+      manager.default_strategies(:scope => :user).unshift :sandstorm
+    end
+  end
+
   config.secret_key = Rails.application.secrets.devise
 
   Warden::Manager.after_set_user do |user,auth,opts|

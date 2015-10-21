@@ -28,6 +28,7 @@ class Membership < ActiveRecord::Base
   delegate :admins, to: :group, prefix: :group
   delegate :name, to: :inviter, prefix: :inviter, allow_nil: true
 
+  before_save :fix_volume_in_sandstorm
   after_destroy :leave_subgroups_of_hidden_parents
 
   def suspend!
@@ -56,6 +57,12 @@ class Membership < ActiveRecord::Base
   end
 
   private
+  def fix_volume_in_sandstorm
+    if is_in_sandstorm?
+      set_volume! :quiet if volume_is_normal? or volume_is_loud?
+    end
+  end
+
   def leave_subgroups_of_hidden_parents
     return if group.nil? #necessary if group is missing (as in case of production data)
     return unless group.is_hidden_from_public?

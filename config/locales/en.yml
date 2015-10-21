@@ -927,6 +927,7 @@ en:
   create_one_now: "Create one now"
   link_it_up_instead: "Link it up instead"
   sign_up_via: "Sign up via"
+  please_sign_in_above: "Please sign in above to continue."
   or_fill_in_this_form: "or fill in this form"
   already_have_account: "Already have a Loomio account?"
   confirm_your_details: "Confirm your details"
@@ -1262,6 +1263,7 @@ en:
   #
 
   about_loomio: "About Loomio"
+  admin: "Admin"
   ago: "%{quantity_of_time} ago"
   approve: "Approve"
   attachments: "Attachments:"

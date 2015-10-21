@@ -52,8 +52,9 @@
         = link_to new_discussion_path(:group_id => @group.id), id: 'start-new-discussion', class: 'btn btn-block btn-primary btn-left cuke-start-discussion' do
           %i.fa.fa-comments
           = t(:start_a_discussion)
-      - if can?(:add_members, @group)
-        = render 'invite_button', group: @group, discussion: @discussion
+      - unless is_in_sandstorm?
+        - if can?(:add_members, @group)
+          = render 'invite_button', group: @group, discussion: @discussion
       - if params[:controller] == 'groups' && params[:action] == 'show'
         - can_edit = can? :edit, @group
         - can_leave = @group.users_include? current_user

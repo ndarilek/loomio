@@ -7,7 +7,7 @@ end
 BlacklistedPassword.delete_all
 seed_from_file('password_blacklist') { |password| BlacklistedPassword.create(string: password) }
 
-if !Rails.env.test?
+if !Rails.env.test?  and !is_in_sandstorm?
   DefaultGroupCover.delete_all
   seed_from_file('default_group_covers') { |url| DefaultGroupCover.store(url) }
 end

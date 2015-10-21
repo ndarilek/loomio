@@ -17,7 +17,7 @@ module GroupsHelper
   end
 
   def group_joining_options(group)
-    if group.is_subgroup_of_hidden_parent?
+    choices = if group.is_subgroup_of_hidden_parent?
       [[t(:'group_form.membership_granted_upon.hidden_parent.request_html',
           parent_group_name: group.parent.name),
         'request'],
@@ -30,6 +30,11 @@ module GroupsHelper
       [[t(:'group_form.membership_granted_upon.request_html'), 'request'],
        [t(:'group_form.membership_granted_upon.approval_html'), 'approval'],
        [t(:'group_form.membership_granted_upon.invitation_html'), 'invitation']]
+    end
+    if is_in_sandstorm?
+      choices.reject { |c| c[-1] == 'invitation' }
+    else
+      choices
     end
   end
 

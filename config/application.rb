@@ -10,6 +10,8 @@ require_relative '../lib/version/minor'
 require_relative '../lib/version/patch'
 require_relative '../lib/version/pre'
 
+require_relative '../lib/sandstorm'
+
 module Loomio
   class Application < Rails::Application
     config.active_job.queue_adapter = :delayed_job
@@ -72,17 +74,23 @@ module Loomio
     config.quiet_assets = true
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
 
-    # Store avatars on Amazon S3
-    config.paperclip_defaults = {
-      :storage => :fog,
-      :fog_credentials => {
-        :provider => 'AWS',
-        :aws_access_key_id => Rails.application.secrets.aws_access_key_id,
-        :aws_secret_access_key => Rails.application.secrets.aws_secret_access_key
-      },
-      :fog_directory => Rails.application.secrets.aws_bucket,
-      :fog_public => true
-    }
+    if is_in_sandstorm?
+      config.paperclip_defaults = {
+        :path => '/var/files/:attachment/:id/:style/:basename.:extension'
+      }
+    else
+      # Store avatars on Amazon S3
+      config.paperclip_defaults = {
+        :storage => :fog,
+        :fog_credentials => {
+          :provider => 'AWS',
+          :aws_access_key_id => Rails.application.secrets.aws_access_key_id,
+          :aws_secret_access_key => Rails.application.secrets.aws_secret_access_key
+        },
+        :fog_directory => Rails.application.secrets.aws_bucket,
+        :fog_public => true
+      }
+    end
 
     config.active_record.raise_in_transactional_callbacks = true
   end

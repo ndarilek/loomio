@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150903161434) do
+ActiveRecord::Schema.define(version: 20151021222915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -715,12 +715,15 @@ ActiveRecord::Schema.define(version: 20150903161434) do
     t.boolean  "email_when_mentioned",                         default: true,       null: false
     t.boolean  "angular_ui_enabled",                           default: false,      null: false
     t.boolean  "email_on_participation",                       default: true,       null: false
+    t.string   "sandstorm_user_id"
+    t.string   "sandstorm_avatar_url"
   end
 
   add_index "users", ["deactivated_at"], name: "index_users_on_deactivated_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["key"], name: "index_users_on_key", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["sandstorm_user_id"], name: "index_users_on_sandstorm_user_id", using: :btree
   add_index "users", ["unsubscribe_token"], name: "index_users_on_unsubscribe_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 

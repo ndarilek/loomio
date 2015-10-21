@@ -35,9 +35,11 @@
               .form__error= t :"start_group_form.group_name_error"
             = f.text_field :name, class: 'form-control', id: 'group_name'
 
-            %p.pricing= t :"start_group_form.pricing_html", link: pricing_path
+            - unless is_in_sandstorm?
+              %p.pricing= t :"start_group_form.pricing_html", link: pricing_path
 
             = f.submit t(:"common.start_group"), class: 'btn btn-success btn-block', :data => { :disable_with => t(:"common.start_group") }, id: 'sign-up-submit'
 
-            %p.small= t :"start_group_form.terms_html", link: terms_of_service_path
+            - unless is_in_sandstorm?
+              %p.small= t :"start_group_form.terms_html", link: terms_of_service_path
 
