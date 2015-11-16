@@ -1,7 +1,15 @@
 class Discussion < ActiveRecord::Base
   PER_PAGE = 50
   SALIENT_ITEM_KINDS = %w[new_comment new_motion new_vote motion_outcome_created]
-  THREAD_ITEM_KINDS = %w[new_comment new_motion new_vote motion_outcome_created motion_outcome_updated]
+  THREAD_ITEM_KINDS = %w[new_comment
+                         new_motion
+                         new_vote
+                         motion_closed
+                         motion_closed_by_user
+                         motion_edited
+                         motion_outcome_created
+                         motion_outcome_updated
+                         discussion_edited]
   paginates_per PER_PAGE
 
   include ReadableUnguessableUrls
@@ -34,7 +42,7 @@ class Discussion < ActiveRecord::Base
   is_translatable on: [:title, :description], load_via: :find_by_key!, id_field: :key
   has_paper_trail only: [:title, :description]
 
-  belongs_to :group, counter_cache: true
+  belongs_to :group
   belongs_to :author, class_name: 'User'
   belongs_to :user, foreign_key: 'author_id'
   has_many :motions, dependent: :destroy
@@ -48,8 +56,8 @@ class Discussion < ActiveRecord::Base
 
   has_many :events, -> { includes :user }, as: :eventable, dependent: :destroy
 
-  has_many :items, -> { includes(eventable: :user).where(kind: THREAD_ITEM_KINDS).order('created_at ASC') }, class_name: 'Event'
-  has_many :salient_items, -> { includes(eventable: :user).where(kind: SALIENT_ITEM_KINDS).order('created_at ASC') }, class_name: 'Event'
+  has_many :items, -> { includes(:user).where(kind: THREAD_ITEM_KINDS).order('created_at ASC') }, class_name: 'Event'
+  has_many :salient_items, -> { includes(:user).where(kind: SALIENT_ITEM_KINDS).order('created_at ASC') }, class_name: 'Event'
 
   has_many :discussion_readers
 
@@ -67,6 +75,13 @@ class Discussion < ActiveRecord::Base
 
   after_create :set_last_activity_at_to_created_at
 
+  define_counter_cache :motions_count do |discussion|
+    discussion.motions.count
+  end
+
+  update_counter_cache :group, :discussions_count
+  update_counter_cache :group, :motions_count
+
   def published_at
     created_at
   end
@@ -77,8 +92,7 @@ class Discussion < ActiveRecord::Base
 
   def archive!
     return if is_archived?
-    self.update_attribute(:archived_at, Time.now) and
-      Group.update_counters(group_id, discussions_count: -1)
+    self.update_attribute(:archived_at, Time.zone.now)
   end
 
   def is_archived?
@@ -129,8 +143,10 @@ class Discussion < ActiveRecord::Base
   end
 
   def thread_item_created!(item)
-    self.items_count += 1
-    self.last_item_at = item.created_at
+    if THREAD_ITEM_KINDS.include? item.kind
+      self.items_count += 1
+      self.last_item_at = item.created_at
+    end
 
     if SALIENT_ITEM_KINDS.include? item.kind
       self.salient_items_count += 1

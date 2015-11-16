@@ -41,7 +41,7 @@ angular.module('loomioApp').factory 'AbilityService', (CurrentUser) ->
     canEditProposal: (proposal) ->
       proposal.isActive() and
       proposal.canBeEdited() and
-      @canAdministerGroup(proposal.group()) or (CurrentUser.isMemberOf(proposal.group()) and CurrentUser.isAuthorOf(proposal))
+      (@canAdministerGroup(proposal.group()) or (CurrentUser.isMemberOf(proposal.group()) and CurrentUser.isAuthorOf(proposal)))
 
     canCreateOutcomeFor: (proposal) ->
       @canSetOutcomeFor(proposal) and !proposal.hasOutcome()
@@ -102,6 +102,9 @@ angular.module('loomioApp').factory 'AbilityService', (CurrentUser) ->
       (group.visibleToOrganisation() and CurrentUser.isMemberOf(group.parent()))
 
     canViewMemberships: (group) ->
+      CurrentUser.isMemberOf(group)
+
+    canViewPreviousProposals: (group) ->
       CurrentUser.isMemberOf(group)
 
     canJoinGroup: (group) ->

@@ -144,7 +144,7 @@ module.exports = new class ThreadHelper
     element(By.css('.thread-context__dropdown-options-edit')).click()
 
   groupTitle: ->
-    element(By.css('.thread-group__name')).getText()
+    element(By.css('.group-theme__name--compact')).getText()
 
   discussionTitle: ->
     element(By.css('.thread-context')).getText()
@@ -163,3 +163,15 @@ module.exports = new class ThreadHelper
 
   angularFeedbackCard: ->
     element(By.css('#angular-feedback-card'))
+
+  threadVolumeCard: ->
+    element(By.css('.thread-volume-card')).getText()
+
+  clickChangeInThreadVolumeCard: ->
+    element(By.css('.thread-volume-card__change-volume-link')).click()
+
+  changeThreadVolumeToLoud: ->
+    element(By.id('volume-loud')).click()
+
+  submitChangeVolumeForm: ->
+    element(By.css('.change-volume-form__submit')).click()

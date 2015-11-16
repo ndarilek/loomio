@@ -18,6 +18,10 @@ class BaseController < ApplicationController
   protected
 
   def boot_angular_ui
+    if browser.ie? && browser.version.to_i < 10
+      redirect_to :browser_not_supported and return
+    end
+
     @appConfig = {
       version: Loomio::Version.current,
       reportErrors: false,
@@ -28,7 +32,8 @@ class BaseController < ApplicationController
       seedRecords: CurrentUserSerializer.new(current_user),
       permittedParams: PermittedParamsSerializer.new({}),
       locales: angular_locales,
-      baseUrl: root_url
+      baseUrl: root_url,
+      safeThreadItemKinds: Discussion::THREAD_ITEM_KINDS
     }
 
     render 'layouts/angular', layout: false

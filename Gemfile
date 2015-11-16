@@ -23,7 +23,6 @@ gem 'jquery-rails', '~> 4.0.3'
 gem 'jquery-ui-rails', '~> 5.0.0'
 gem 'simple_form', '3.1.0'
 gem 'cancancan'
-gem 'rmagick', '~> 2.15.0'
 gem 'gravtastic'
 gem 'paperclip', '~> 4.2.4'
 gem 'kaminari'
@@ -72,6 +71,7 @@ gem 'oj_mimic_json'
 #gem 'activeuuid', '>= 0.5.0'
 
 gem 'snorlax'
+gem 'custom_counter_cache'
 
 # consider uncommenting these when we want to mess around with json parsing
 #gem 'oj'

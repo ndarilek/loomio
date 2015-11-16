@@ -3,26 +3,18 @@ class DevelopmentController < ApplicationController
 
   around_filter :ensure_testing_environment
 
+  def index
+    @routes = DevelopmentController.action_methods.select do |action|
+      action.starts_with? 'setup'
+    end
+    render layout: false
+  end
+
   def last_email
     @email = ActionMailer::Base.deliveries.last
     render layout: false
   end
 
-  def discussion_url(discussion)
-    "http://localhost:8000/d/#{discussion.key}/"
-  end
-
-  def group_url(group)
-    "http://localhost:8000/g/#{group.key}/"
-  end
-
-  def dashboard_url
-    "http://localhost:8000/dashboard"
-  end
-
-  def inbox_url
-    "http://localhost:8000/inbox"
-  end
 
   def setup_dashboard
     cleanup_database
@@ -40,6 +32,15 @@ class DevelopmentController < ApplicationController
     redirect_to inbox_url
   end
 
+  def setup_new_group
+    cleanup_database
+    group = Group.new(name: 'Fresh group')
+    StartGroupService.start_group(group)
+    group.add_admin! patrick
+    sign_in patrick
+    redirect_to group_url(group)
+  end
+
   def setup_group
     cleanup_database
     sign_in patrick
@@ -47,12 +48,62 @@ class DevelopmentController < ApplicationController
     redirect_to group_url(test_group)
   end
 
-  def setup_public_group_with_public_content
+  def setup_group_with_many_discussions
     cleanup_database
     sign_in patrick
+    test_group.add_member! emilio
+    50.times do
+      DiscussionService.create(discussion: FactoryGirl.build(:discussion, group: test_group, author: emilio), actor: emilio)
+    end
+    redirect_to group_url(test_group)
+  end
+
+  def setup_group_on_trial_admin
+    cleanup_database
+    sign_in patrick
+    GroupService.create(group: test_group, actor: current_user)
+    redirect_to group_url(test_group)
+  end
+
+  def setup_group_on_trial
+    cleanup_database
+    sign_in jennifer
+    GroupService.create(group: test_group, actor: current_user)
+    redirect_to group_url(test_group)
+  end
+
+  def setup_group_with_expired_trial
+    cleanup_database
+    GroupService.create(group: test_group, actor: current_user)
+    sign_in patrick
+    subscription = test_group.subscription
+    subscription.update_attribute :expires_at, 1.day.ago
+    redirect_to group_url(test_group)
+  end
+
+  def setup_group_with_overdue_trial
+    cleanup_database
+    GroupService.create(group: test_group, actor: patrick)
+    sign_in patrick
+    subscription = test_group.subscription
+    subscription.update_attribute :expires_at, 20.days.ago
+    redirect_to group_url(test_group)
+  end
+
+  def setup_group_on_paid_plan
+    cleanup_database
+    GroupService.create(group: test_group, actor: patrick)
+    sign_in patrick
+    subscription = test_group.subscription
+    subscription.update_attribute :kind, 'paid'
+    redirect_to group_url(test_group)
+  end
+
+  def setup_public_group_with_public_content
+    cleanup_database
     another_test_group
-    public_test_discussion
-    patrick.memberships.first.destroy
+    public_test_proposal
+    sign_in jennifer
     redirect_to discussion_url(public_test_discussion)
   end
 
@@ -151,6 +202,14 @@ class DevelopmentController < ApplicationController
     redirect_to discussion_url(test_discussion)
   end
 
+  def setup_previous_proposal
+    cleanup_database
+    sign_in patrick
+    test_proposal
+    MotionService.close(test_proposal)
+    redirect_to previous_proposal_url(test_group)
+  end
+
   def setup_proposal_closing_soon
     cleanup_database
     sign_in patrick
@@ -200,6 +259,26 @@ class DevelopmentController < ApplicationController
   end
 
   private
+
+  def discussion_url(discussion)
+    "http://localhost:8000/d/#{discussion.key}/"
+  end
+
+  def group_url(group)
+    "http://localhost:8000/g/#{group.key}/"
+  end
+
+  def dashboard_url
+    "http://localhost:8000/dashboard"
+  end
+
+  def inbox_url
+    "http://localhost:8000/inbox"
+  end
+
+  def previous_proposal_url(group)
+    "http://localhost:8000/g/#{group.key}/previous_proposals"
+  end
 
   def setup_all_notifications_work
     #'comment_liked'
@@ -254,6 +333,7 @@ class DevelopmentController < ApplicationController
   def patrick
     @patrick ||= User.create!(name: 'Patrick Swayze',
                               email: 'patrick_swayze@example.com',
+                              is_admin: true,
                               username: 'patrickswayze',
                               password: 'gh0stmovie',
                               detected_locale: 'en',
@@ -317,7 +397,7 @@ class DevelopmentController < ApplicationController
 
   def test_discussion
     unless @test_discussion
-      @test_discussion = Discussion.create(title: 'What star sign are you?', group: test_group, author: jennifer, private: true)
+      @test_discussion = Discussion.create(title: 'What star sign are you?', group: test_group, author: jennifer, private: false)
       DiscussionService.create(discussion: @test_discussion, actor: @test_discussion.author)
     end
     @test_discussion
@@ -365,6 +445,16 @@ class DevelopmentController < ApplicationController
       MotionService.create(motion: @test_proposal, actor: jennifer)
     end
     @test_proposal
+  end
+
+  def public_test_proposal
+    unless @public_test_proposal
+      @public_test_proposal = Motion.new(name: 'Lets holiday on Earth instead',
+                                         closing_at: 3.days.from_now.beginning_of_hour,
+                                         discussion: public_test_discussion)
+      MotionService.create(motion: @public_test_proposal, actor: patrick)
+    end
+    @public_test_proposal
   end
 
   def test_vote

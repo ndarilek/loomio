@@ -53,8 +53,7 @@ class Ability
       end
     end
 
-    can [:view_payment_details,
-         :choose_subscription_plan], Group do |group|
+    can [:view_payment_details, :choose_subscription_plan], Group do |group|
       group.is_parent? and user_is_admin_of?(group.id) and (!group.has_manual_subscription?)
     end
 
@@ -71,7 +70,7 @@ class Ability
       (user_is_admin_of?(group.id) && group.enabled_beta_features.include?('export'))
     end
 
-    can [:members_autocomplete, :set_volume, :see_members, :move_discussions_to], Group do |group|
+    can [:members_autocomplete, :set_volume, :see_members, :move_discussions_to, :view_previous_proposals], Group do |group|
       user_is_member_of?(group.id)
     end
 
@@ -127,11 +126,15 @@ class Ability
       end
     end
 
+    can :show, User do |user|
+      user.active?
+    end
+
     can :deactivate, User do |user_to_deactivate|
       not user_to_deactivate.adminable_groups.published.any? { |g| g.admins.count == 1 }
     end
 
-    can :update, User do |user|
+    can [:update, :see_notifications_for], User do |user|
       @user == user
     end
 
