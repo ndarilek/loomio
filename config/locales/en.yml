@@ -930,8 +930,6 @@ en:
   or: "or"
   invalid_email: The email address you entered was not recognised. Verify it is entered correctly or try another email address.
   forgot_your_password: "Forgot your password?"
-  dont_have_an_account: "Don't have an account?"
-  create_one_now: "Create one now"
   link_it_up_instead: "Link it up instead"
   sign_up_via: "Sign up via"
   please_sign_in_above: "Please sign in above to continue."
@@ -1016,7 +1014,7 @@ en:
   introduction_thread:
     title: "Welcome to %{group_name}"
     description: |
-      Please take a moment to introduce yourself. You might like to share how you fit with this group of people.
+      Please take a moment to introduce yourself: **post a comment** in the form below.
 
       If you have clear intentions for this Loomio group, you could share them here so everyone has an idea of what they want to achieve together.
 
@@ -1029,7 +1027,7 @@ en:
 
       You are currently reading the thread **context**. Use this space to give the background information the group needs for a productive discussion.
 
-      The **proposal** panel is where you make decisions. You can start proposals and participated in them there.
+      The **proposal** panel is where you make decisions. You can start proposals and participate in them there.
 
       The **activity** panel below shows everything that’s happened in this thread.
 
@@ -1041,8 +1039,8 @@ en:
 
       Here are some things you might want to try to get things under way:
 
-      - Set your [profile picture](%{hostname}/profile)
-      - Configure your [email settings](%{hostname}/email_preferences)
+      - Set your [profile picture](/profile)
+      - Configure your [email settings](/email_preferences)
       - Introduce yourself to the group in the [Welcome to %{group_name} thread](%{thread_url})
 
       If you’ve got any questions, the first place to check is the [Loomio help manual](http://help.loomio.org).
@@ -1388,7 +1386,6 @@ en:
 
   common:
     profile: "Profile"
-    welcome_back: "Welcome back!"
     email_settings: "Email settings"
     markdown_help_tooltip: 'Learn the basics of formatting your text with Markdown'
     settings: Settings
@@ -1513,6 +1510,7 @@ en:
       motion_outcome_updated: "*%{author}* updated the outcome for *%{name}*"
       new_motion: "*%{author}* started a new proposal in *%{name}*"
       new_vote: "*%{author}* %{position} *%{proposal}* in *%{name}*"
+      new_discussion: "*%{author}* started a new discussion in *%{group}*"
       view_it_on_loomio: "View it on Loomio"
       position_verbs:
         "yes": "agreed on"

@@ -20,12 +20,6 @@ angular.module('loomioApp').controller 'GroupPageController', ($rootScope, $loca
   @canManageMembershipRequests = ->
     AbilityService.canManageMembershipRequests(@group)
 
-  @showTrialCard = ->
-    @group.subscriptionKind == 'trial' and AbilityService.canAdministerGroup(@group) and AppConfig.chargify?
-
-  @showGiftCard = ->
-    @group.subscriptionKind == 'gift' and AppConfig.chargify?
-
   @canUploadPhotos = ->
     AbilityService.canAdministerGroup(@group)
 
@@ -36,13 +30,13 @@ angular.module('loomioApp').controller 'GroupPageController', ($rootScope, $loca
     ModalService.open LogoPhotoForm, group: => @group
 
   @handleSubscriptionSuccess = ->
-    if AppConfig.chargify and $location.search().chargify_success?
+    if (AppConfig.chargify or AppConfig.environment == 'development') and $location.search().chargify_success?
       @group.subscriptionKind = 'paid' # incase the webhook is slow
       $location.search 'chargify_success', null
       ModalService.open SubscriptionSuccessModal
 
   @handleWelcomeModal = ->
-    if @group.noInvitationsSent() and !@group.trialIsOverdue() and !GroupWelcomeModal.shownToGroup[@group.id]?
+    if CurrentUser.isAdminOf(@group) and @group.noInvitationsSent() and !@group.trialIsOverdue() and !GroupWelcomeModal.shownToGroup[@group.id]?
       GroupWelcomeModal.shownToGroup[@group.id] = true
       ModalService.open GroupWelcomeModal
 

@@ -11,7 +11,7 @@ angular.module('loomioApp').factory 'AbilityService', (CurrentUser) ->
       thread and
       !thread.hasActiveProposal() and
       (@canAdministerGroup(thread.group()) or
-      (CurrentUser.isMemberOf(thread.group()) and thread.group().membersCanRaiseProposals))
+      (CurrentUser.isMemberOf(thread.group()) and thread.group().membersCanRaiseMotions))
 
     canEditThread: (thread) ->
       @canAdministerGroup(thread.group()) or
@@ -28,6 +28,9 @@ angular.module('loomioApp').factory 'AbilityService', (CurrentUser) ->
 
     canChangeThreadVolume: (thread) ->
       CurrentUser.isMemberOf(thread.group())
+
+    canChangeGroupVolume: (group) ->
+      CurrentUser.isMemberOf(group)
 
     canVoteOn: (proposal) ->
       proposal.isActive() and
@@ -97,9 +100,9 @@ angular.module('loomioApp').factory 'AbilityService', (CurrentUser) ->
       (group.membersCanAddMembers and CurrentUser.isMemberOf(group)) or @canAdministerGroup(group)
 
     canViewGroup: (group) ->
-      group.visibleToPublic() or
-      CurrentUser.isMemberOf(group) or
-      (group.visibleToOrganisation() and CurrentUser.isMemberOf(group.parent()))
+      !group.privacyIsSecret() or
+      CurrentUser.isMemberOf(group)
+      # (group.visibleToOrganisation() and CurrentUser.isMemberOf(group.parent()))
 
     canViewMemberships: (group) ->
       CurrentUser.isMemberOf(group)
