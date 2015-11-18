@@ -16,7 +16,7 @@
         %span.lmo-navbar__btn-label{translate: 'navbar.groups'}
     .lmo-navbar__item.lmo-navbar__logo
       %img{src: 'img/logo.png'}
-      %span{ng-if: '!officialLoomio'}
+      %span{ng-if: '!officialLoomio && !isInSandstorm'}
         {{hostName}}
   .lmo-navbar-item-container.lmo-navbar-item-container--right
     %section.lmo-navbar-item-container__sub.lmo-navbar-item-container__sub--left{role: 'search'}
@@ -25,5 +25,5 @@
     %section.lmo-navbar-item-container__sub.lmo-navbar-item-container__sub--right{aria-label: "{{ 'navbar.user_actions' | translate }}"}
       .lmo-navbar__item.lmo-navbar__item--notifications
         %notifications
-      .lmo-navbar__item.lmo-navbar__item--user
+      .lmo-navbar__item.lmo-navbar__item--user{ng-if: '!isInSandstorm'}
         %navbar_user_options

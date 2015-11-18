@@ -1,8 +1,11 @@
 angular.module('loomioApp').factory 'ChangeThreadVolumeForm', ->
   templateUrl: 'generated/components/change_thread_volume_form/change_thread_volume_form.html'
-  controller: ($scope, thread, FormService) ->
+  controller: ($scope, thread, FormService, AppConfig) ->
     $scope.thread = thread.clone()
-    $scope.volumeLevels = ["loud", "normal", "quiet", "mute"]
+    $scope.volumeLevels = if AppConfig.isInSandstorm?
+      ["quiet", "mute"]
+    else
+      ["loud", "normal", "quiet", "mute"]
 
     $scope.submit = FormService.submit $scope, $scope.thread,
       submitFn: $scope.thread.changeVolume

@@ -11,6 +11,8 @@ angular.module('loomioApp').directive 'navbar', ->
 
     $scope.hostName = parser.hostname
 
+    $scope.isInSandstorm = AppConfig.isInSandstorm
+
 
     $scope.$on 'currentComponent', (el, component) ->
       $scope.selected = component.page
