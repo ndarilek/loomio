@@ -1,4 +1,4 @@
-angular.module('loomioApp').controller 'ProfilePageController', ($rootScope, Records, FormService, $location, AbilityService, ModalService, ChangePictureForm, ChangePasswordForm, DeactivateUserForm, $translate, CurrentUser, AppConfig) ->
+angular.module('loomioApp').controller 'ProfilePageController', ($rootScope, Records, FormService, $location, AbilityService, ModalService, ChangePictureForm, ChangePasswordForm, DeactivateUserForm, $translate, CurrentUser, AppConfig, $scope) ->
   @user = CurrentUser
 
   @init = =>
@@ -24,5 +24,7 @@ angular.module('loomioApp').controller 'ProfilePageController', ($rootScope, Rec
 
   @canDeactivateUser = ->
     AbilityService.canDeactivateUser()
+
+  $scope.isInSandstorm = AppConfig.isInSandstorm
 
   return

@@ -1,4 +1,4 @@
-angular.module('loomioApp').controller 'AdminMembershipsPanelController', ($scope, CurrentUser, AbilityService, ModalService, Records, FlashService, RemoveMembershipForm, InvitationForm, $filter) ->
+angular.module('loomioApp').controller 'AdminMembershipsPanelController', ($scope, CurrentUser, AbilityService, ModalService, Records, FlashService, RemoveMembershipForm, InvitationForm, AppConfig, $filter) ->
 
   $scope.canRemoveMembership = (membership) ->
     AbilityService.canRemoveMembership(membership)
@@ -23,3 +23,5 @@ angular.module('loomioApp').controller 'AdminMembershipsPanelController', ($scop
 
   $scope.invitePeople = ->
     ModalService.open InvitationForm, group: => $scope.group
+
+  $scope.isInSandstorm = AppConfig.isInSandstorm
